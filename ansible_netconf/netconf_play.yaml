@@ -1,0 +1,46 @@
+---
+
+- name: netconf play 
+  hosts: all
+  gather_facts: False
+  connection: netconf
+
+
+  tasks:
+
+    - name: set ospf through jinja2
+      netconf_config:
+        username: admin
+        password: admin
+        look_for_keys: False
+        src: templates/interface.j2
+
+    - name: set ospf enable 
+      netconf_config:
+        username: admin
+        password: admin
+        look_for_keys: False
+        content: |
+            <config>
+             <routing xmlns="http://ruggedcom.com/ns/rmf_routing">
+              <dynamic>
+                <ospf>
+                 <enabled/>
+                </ospf>
+              </dynamic>
+             </routing>
+            </config>
+
+    - name: configurable backup path
+      netconf_config:
+        username: admin
+        password: admin
+        look_for_keys: False
+        timeout: 60
+        format: xml
+        backup: yes
+        backup_options:
+          filename: netconf_backup.cfg
+          dir_path: /home/saifullah/Documents/
+
+
